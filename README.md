@@ -17,7 +17,7 @@ This python package is build based on BartPy package, the pure python version of
 
 
 ##Usage and examples
-####The easiest way to run and obtain result
+###The easiest way to run and obtain result
 
 * Preparation
 
@@ -58,7 +58,7 @@ acc_g = build_group_wise_model(dataset, pair_list)
 # This function returns accuracy in testing data.
 
 ```
-####To design a customization version and/or tune model parameters. Please consider the following. 
+###To design a customization version and/or tune model parameters. Please consider the following. 
 
 * Write your own helper function instead of calling functions in *groupbart.py*, the only thing you may need in *groupbart.py* is  *get_pair(dataset)*, which will help you find the proper grouping information.
 
