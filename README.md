@@ -104,6 +104,6 @@ acc = ut.get_error_reg(y_pred, y_true)
 
 ## Acknowledge  
 
-We truly thank him for his contribution to BartPy package.
+We truly thank Mr. Jake Coltman for his contribution to BartPy package.
 
 
