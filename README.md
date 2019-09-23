@@ -12,12 +12,24 @@ This python package is build based on BartPy package, the pure python version of
 
 ## Installation
 ### Using pip
-
+```
+pip install gbart
+Note: a typo is fixing, somehow using pip will result in a missed subfolder(modified_bart), we recommend install it manually.
+```
 ### Mannually installation
+```
+1. Visit our website https://github.com/augusHsu/gbart
+
+2. Directly download folder "gbart"
+
+3. put folders into place where you usually import packages, generally, it should be in 
+ ~/bin/python3.7/site-packages/ 
+ or put it with your script in same folder, then it will be fine.
+```
 
 
-##Usage and examples
-###The easiest way to run and obtain result
+## Usage and examples
+### The easiest way to run and obtain result
 
 * Preparation
 
@@ -58,7 +70,7 @@ acc_g = build_group_wise_model(dataset, pair_list)
 # This function returns accuracy in testing data.
 
 ```
-###To design a customization version and/or tune model parameters. Please consider the following. 
+### To design a customization version and/or tune model parameters. Please consider the following. 
 
 * Write your own helper function instead of calling functions in *groupbart.py*, the only thing you may need in *groupbart.py* is  *get_pair(dataset)*, which will help you find the proper grouping information.
 
