@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gbart",
-    version="0.0.1",
+    version="0.0.2",
     author="Augus Hsu(Yuhao Su)",
     author_email="su000088@umn.edu",
     description='A python package to implement Variable grouping based on Bayesian additive regression tree',
@@ -13,6 +13,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/AugusHsu/gbart",
     packages=setuptools.find_packages(),
+    package_data={'gbart': ['modified_bartpy/*.py',
+							'modified_bartpy/diagnostics/*.py',
+							'modified_bartpy/extensions/*.py',
+							'modified_bartpy/samplers/*.py',
+							'modified_bartpy/samplers/treemutation/*.py',
+							'modified_bartpy/samplers/treemutation/uniform/*.py'
+	]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -29,6 +36,8 @@ setuptools.setup(
         'sklearn',
         'statsmodels',
     ]
+
+
 )
 
 

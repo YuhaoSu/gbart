@@ -65,7 +65,7 @@ output_pair = get_pair(dataset)
 * Build the gbart model 
 
 ```
-acc_g = build_group_wise_model(dataset, pair_list)
+acc_g = build_group_wise_model(dataset, output_pair)
 # take "output_pair" as pair_list 
 # This function returns accuracy in testing data.
 

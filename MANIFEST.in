@@ -1,0 +1,6 @@
+include gbart/gbart/modified_bartpy/*.py
+include gbart/gbart/modified_bartpy/diagnostics/*.py
+include gbart/gbart/modified_bartpy/extensions/*.py
+include gbart/gbart/modified_bartpy/samplers/*.py
+include gbart/gbart/modified_bartpy/samplers/treemutation/*.py
+include gbart/gbart/modified_bartpy/samplers/treemutation/uniform/*.py
