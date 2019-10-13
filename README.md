@@ -24,12 +24,12 @@ Note: a typo is fixing, somehow using pip will result in a missed subfolder(modi
 
 3. put folders into place where you usually import packages, generally, it should be in 
  ~/bin/python3.7/site-packages/ 
- or put it with your script in same folder, then it will be fine.
+ Or put it with your script in same folder, then it will be fine.
 ```
 
 
 ## Usage and examples
-### The easiest way to run and obtain result
+### The easiest way to run and obtain result (generated data)
 
 * Preparation
 
@@ -70,9 +70,9 @@ acc_g = build_group_wise_model(dataset, output_pair)
 # This function returns accuracy in testing data.
 
 ```
-### To design a customization version and/or tune model parameters. Please consider the following. 
+ **To design a customization version and/or tune model parameters. Please consider the following**
 
-* Write your own helper function instead of calling functions in *groupbart.py*, the only thing you may need in *groupbart.py* is  *get_pair(dataset)*, which will help you find the proper grouping information.
+* Write your own helper function instead of calling functions in **groupbart.py**, the only thing you may need in **groupbart.py** is  **get_pair(dataset)**, which will help you find the proper grouping information.
 
 
 * Tune the parameters of both BART and GBART model. Here is an easy example.
@@ -111,6 +111,57 @@ y_true = Data_predict[:,-1]
 acc = ut.get_error_reg(y_pred, y_true)
 
 ```
+### Real data example
+
+
+* Preparation
+
+```
+import numpy as np
+import pandas as pd
+from gbart.groupbart import * 
+```
+* load and pre-processing data
+
+```
+url = "~/Admission_Predict_Ver1.1.csv"
+data = pd.read_csv(url)
+data = data.drop(columns="Serial No.")
+dataset = data.iloc[:, :].values
+# Note our package can match with Sklearn, we use the same dataset type. 
+```
+* Build model and get accuracy by using BART.
+
+```
+acc_o = build_original_model(dataset)
+# This function splits the whole dataset into training and testing (80% for training)
+# This function returns accuracy in testing data.
+```
+
+* Get the grouping information
+
+```
+output_pair = get_pair(dataset)
+# return the the grouping information. The first phase of Gbart algorithm.
+
+```
+
+* Build the gbart model 
+
+```
+acc_g = build_group_wise_model(dataset, output_pair)
+# take "output_pair" as pair_list 
+# This function returns accuracy in testing data.
+
+```
+
+* Tune the parameters of both BART and GBART model. Please refer to the generated part.
+
+* One more advcanced thing that worth to explore: During the group searching process, we may need to set some threshold to control the variable selection. I fix it to be 85 percent of the best, you can tune it by change that constant to be an attribute in **get_pair(dataset)**.
+
+## Announcement 
+
+Since our algorithm only focuses on at most second order and assume no overlapping. We believe group searching with higher order and overlapping will result in better performance. Contributions for higher orders and extension are welcomed. For details of "orders and overlapping", please refer to our paper.
 
 
 
@@ -118,9 +169,10 @@ acc = ut.get_error_reg(y_pred, y_true)
 
 We truly thank Mr. Jake Coltman for his contribution to BartPy package.
 
+
 ## Reference
 
-[1]. Chipman, Hugh A., Edward I. George, and Robert E. McCulloch. “BART: Bayesian Additive Regression Trees.” The Annals of Applied Statistics 4.1 (2010): 266–298. Crossref. Web. 
+[1] Chipman, Hugh A., Edward I. George, and Robert E. McCulloch. “BART: Bayesian Additive Regression Trees.” The Annals of Applied Statistics 4.1 (2010): 266–298. Crossref. Web. 
 
  
 
