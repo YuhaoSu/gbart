@@ -3,9 +3,9 @@
 
 ## Introduction
 
-GBART is a pure python package to implement our proposed algorithm Gbart, it is based on Bayesian additive regression tree(BART) framework of Chipman et al. 
+GBART is a pure python package to implement our proposed algorithm Gbart, it is based on Bayesian additive regression tree(BART) framework of Chipman et al [1]. 
 
-Through Gbart, We try to find potential grouping of variables in the sense that there is no interaction term between variables of different groups. For details please visit our recent paper.
+Through GBART, We try to find potential grouping of variables in the sense that there is no interaction term between variables of different groups. For details please visit our recent paper.
 
 This python package is build based on BartPy package, the pure python version of BART, for details please refer to the offical website of BartPy.
 
@@ -118,4 +118,9 @@ acc = ut.get_error_reg(y_pred, y_true)
 
 We truly thank Mr. Jake Coltman for his contribution to BartPy package.
 
+## Reference
+
+[1]. Chipman, Hugh A., Edward I. George, and Robert E. McCulloch. “BART: Bayesian Additive Regression Trees.” The Annals of Applied Statistics 4.1 (2010): 266–298. Crossref. Web. 
+
+ 
 
