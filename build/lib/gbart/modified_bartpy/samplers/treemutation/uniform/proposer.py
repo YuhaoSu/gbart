@@ -14,7 +14,18 @@ from gbart.modified_bartpy.tree import Tree
 def uniformly_sample_grow_mutation(tree: Tree) -> TreeMutation:
     node = random_splittable_leaf_node(tree)
     updated_node = sample_split_node(node)
+    updated_node.s_list = node.s_list
     return GrowMutation(node, updated_node)
+    """
+    if updated_node is None:
+        _node = random_prunable_decision_node(tree)
+        _updated_node = LeafNode(_node.split, depth=_node.depth)
+        _updated_node.s_list = _node.s_list
+        return PruneMutation(_node, _updated_node)
+    else:
+        updated_node.s_list = node.s_list
+        return GrowMutation(node, updated_node)
+    """
 
 
 def uniformly_sample_prune_mutation(tree: Tree) -> TreeMutation:
@@ -33,25 +44,23 @@ class UniformMutationProposer(TreeMutationProposer):
             if prob_method is None:
                 prob_method = [0.5, 0.5]
             self.prob_method_lookup = {x[0]: x[1] for x in zip([uniformly_sample_grow_mutation, uniformly_sample_prune_mutation], prob_method)}
-        #print(self.prob_method_lookup)
         self.methods = list(self.prob_method_lookup.keys())
         self.proposals = None
         self.refresh_proposal_cache()
 
     def refresh_proposal_cache(self):
         self.proposals = list(np.random.choice(list(self.prob_method_lookup.keys()), p=list(self.prob_method_lookup.values()), size=250))
-        #print(self.proposals[0])
-        #print(self.proposals[2])
-    def sample_mutation_method(self) -> Callable[[Tree], TreeMutation]:
-        #if len(self.proposals) == 0: print("WWWW")
-        prop = self.proposals.pop()
-        #print(prop)
+       
+    def sample_mutation_method(self) -> Callable[[Tree], TreeMutation]:        
+        prop = self.proposals.pop()    
         if len(self.proposals) == 0:
             self.refresh_proposal_cache()
+      
         return prop
 
     def propose(self, tree: Tree) -> TreeMutation:
         method = self.sample_mutation_method()
+        
         try:
             return method(tree)
         except NoSplittableVariableException:
@@ -128,10 +137,19 @@ def sample_split_condition(node: LeafNode) -> Optional[Tuple[SplitCondition, Spl
     """
     #if node.s_list is not None : print(node.s_list)
     if node.s_list is None:
-        split_variable = np.random.choice(list(node.split.data.splittable_variables()))
+        available_list = list(node.split.data.splittable_variables())
+        #print(len(available_list))
+        split_variable = np.random.choice(available_list)
     else:           
     #print(list(node.split.data.splittable_variables()))
-        split_variable = np.random.choice(node.s_list)
+        splittable_variables_list = set(node.split.data.splittable_variables())
+        s_variables_list = set(node.s_list)
+        available_list = list(s_variables_list & splittable_variables_list)
+        if len(available_list) == 0:
+            raise NoSplittableVariableException()
+        else:
+            split_variable = np.random.choice(available_list)
+        
     #split_variable = np.random.choice(list(node.split.data.splittable_variables()))
     split_value = node.data.random_splittable_value(split_variable)
     if split_value is None:
@@ -145,5 +163,7 @@ def sample_split_node(node: LeafNode) -> DecisionNode:
     The variable and value to split on is determined by sampling from their respective distributions
     """
     conditions = sample_split_condition(node)
-    
-    return split_node(node, conditions)
+    if conditions is None:
+        return None
+    else:
+        return split_node(node, conditions)

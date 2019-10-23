@@ -136,7 +136,7 @@ class SklearnModel(BaseEstimator, RegressorMixin):
 
     @staticmethod
     def _combine_chains(extract):
-        model_samples, prediction_samples = extract[0]  #Might have a problem
+        model_samples, prediction_samples = extract[0] 
         for x in extract[1:]:
             model_samples += x[0]
             prediction_samples = np.concatenate([prediction_samples, x[1]], axis=0)
@@ -160,6 +160,7 @@ class SklearnModel(BaseEstimator, RegressorMixin):
         return self.model
 
     def delayed_chains(self, X: Union[np.ndarray, pd.DataFrame], y: np.ndarray):
+        # Initialize model
         self.model = self._construct_model(X, y)
         return [delayed(self.sampler.samples)(self.model,
                                               self.n_samples,

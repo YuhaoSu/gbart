@@ -3,13 +3,17 @@
 
 ## Introduction
 
-GBART is a pure python package to implement our proposed algorithm GBART in our ICASSP2020 submitted paper *Variable Grouping based Bayesian Additive Regression Tree*.
+GBART is a pure python package to implement our proposed algorithm GBART in our ICASSP2020 submitted paper:  
 
-It is based on a sum-of-learner model BART (Bayesian additive regression tree) proposed by Chipman et al [1]. 
+*Variable Grouping based Bayesian Additive Regression Tree*
 
-Through GBART, We try to find potential grouping of variables in the sense that there is no interaction term between variables of different groups. For details please visit our recent paper.
+Through GBART, We will seek for potential grouping of variables in such way that there is no nonlinear interaction term between variables of different groups, then we build the final model that can take advantage of such concealed information.
 
-This python package is built based on BartPy package, the pure python version of BART, for details please refer to the offical website of BartPy.
+GBART consists of two stages. The first stage is to search for potential interactions and an appropriate grouping of variables. The second stage is to build a final model based on the discovered groups.
+
+
+This python package is built based on BartPy package, the pure python version of BART proposed by Chipman et. al [1]. For details please refer to the offical website [BartPy](https://github.com/JakeColtman/bartpy).
+
 
 
 ## Installation
@@ -59,8 +63,11 @@ acc_o = build_original_model(dataset)
 * Get the grouping information
 
 ```
-output_pair = get_pair(dataset)
-# return the the grouping information. The first phase of Gbart algorithm.
+output_pair = get_pair(dataset, theta=1)
+# return the grouping information. The first stage of GBART.
+# theta is a parameter that controls variable selection. Suggested range is [0,1]
+# To turn off the variable selection, set theta=0
+# More variables are likely to be removed when theta is higher.
 
 ```
 
@@ -100,7 +107,7 @@ model = SklearnModel(sublist=None,
                      n_burn=200,
                      thin=0.1,
                      n_jobs=1)
-# This GBART model inherited BART model, a new feature named sublist is added. 
+# This GBART model is built based on BART model, a new feature named sublist is added. 
 # sublist can either take "None" or list of groups of variables as input.
 # when sublist is None, it will be the exact BART model.
 # when sublist is a list, it will build GBART model.
@@ -159,11 +166,8 @@ acc_g = build_group_wise_model(dataset, output_pair)
 
 * Tune the parameters of both BART and GBART model. Please refer to the generated part.
 
-* One more advcanced thing that worth to explore: During the group searching process, we may need to set some threshold to control the variable selection. I fix it to be 85 percent of the best, you can tune it by change that constant to be an attribute in **get_pair(dataset)**.
+* One more advcanced thing that worth to explore: During the group searching process, we may need to set some threshold to control the variable selection. I fix it to be 85 percent of the best, you can tune it by change that constant to be an attribute in **get_pair(dataset)**
 
-## Announcement 
-
-Since our algorithm only focuses on at most second order and assume no overlapping. We believe group searching with higher order and overlapping will result in better performance. Contributions for higher orders and extension are welcomed. For details of "orders and overlapping", please refer to our paper.
 
 
 

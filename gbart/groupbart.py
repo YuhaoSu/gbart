@@ -23,14 +23,14 @@ def helper_model_acc(dataset, pair_list):
     # use original bart
     # build model
     model = SklearnModel(sublist=pair_list,
-                         n_trees=50,
+                         n_trees=100,
                          n_chains=4,
-                         n_samples=50,
-                         n_burn=300,
+                         n_samples=100,
+                         n_burn=200,
                          thin=0.1,
                          n_jobs=4)
     # fit and prediction
-    _model_samples = model.fit(x_data, y_data)
+    model.fit(x_data, y_data)
     y_pred = model.predict(Data_predict[:, :-1])
     y_true = Data_predict[:, -1]
     acc = ut.get_error_reg(y_pred, y_true)
@@ -47,10 +47,10 @@ def build_group_wise_model(dataset, pair_list):
     # use original bart
     # build model
     model = SklearnModel(sublist=pair_list,
-                         n_trees=200,
+                         n_trees=100,
                          n_chains=4,
-                         n_samples=200,
-                         n_burn=300,
+                         n_samples=100,
+                         n_burn=200,
                          thin=0.1,
                          n_jobs=4)
     # fit and prediction
@@ -72,10 +72,10 @@ def build_true_group_model(dataset, pair_list):
     # use original bart
     # build model
     model = SklearnModel(sublist=pair_list,
-                         n_trees=200,
+                         n_trees=100,
                          n_chains=4,
-                         n_samples=200,
-                         n_burn=300,
+                         n_samples=100,
+                         n_burn=200,
                          thin=0.1,
                          n_jobs=4)
     # fit and prediction
@@ -97,10 +97,10 @@ def build_original_model(dataset):
     # use original bart
     # build model
     model = SklearnModel(sublist=None,
-                         n_trees=200,
+                         n_trees=100,
                          n_chains=4,
-                         n_samples=200,
-                         n_burn=300,
+                         n_samples=100,
+                         n_burn=200,
                          thin=0.1,
                          n_jobs=4)
     # fit and prediction
@@ -122,7 +122,7 @@ def helper_rf_acc(dataset):
     # use original bart
     # build model
     model = RandomForestRegressor(
-        n_estimators=100, max_depth=20, max_features=3, bootstrap=True)
+        n_estimators=200, max_depth=20, max_features=3, bootstrap=True)
     model.fit(x_data, y_data)
     y_pred = model.predict(Data_predict[:, :-1])
     y_true = Data_predict[:, -1]
@@ -139,7 +139,11 @@ def helper_flatten(list_A):
     return flattened
 
 
-def get_pair(dataset):
+def get_pair(dataset, theta):
+    """
+    dataset: dataset
+    theta: threshold to control variable selection. Range [0,inf) more higher, more variable removed
+    """
     # pre processing to delete variables
     num_var = np.shape(dataset)[1] - 1
     pair_list = None
@@ -151,19 +155,24 @@ def get_pair(dataset):
     temp_delete = []
     
     print("start variable selection!")
+    print("threshold=", theta)
     for i in range(num_var):
         part1 = [temp_index_var[i]]
         temp_pair_list = list(set(temp_index_var) - set(part1))
         acc_i = helper_model_acc(dataset, [temp_pair_list])
         # recording the index of variable to be deleted
-        if acc_i <= acc_best *0.85 :
+    
+        if acc_i <= acc_best * theta :
             temp_delete.append(i)
     
     # delete variables
     index_var_remain = list(set(temp_index_var) - set(temp_delete))
-    print("remaining variable:", index_var_remain)
     var_num_ = len(index_var_remain)
-
+    if var_num_ <= 1:
+        index_var_remain = list(set(temp_index_var))
+        var_num_ = len(index_var_remain)
+    print("remaining variable:", index_var_remain)
+    # If there is only one or no variables after variable selection, we use the original.
     # to get the index list
     acc_array = np.zeros(var_num_)
     for i in range(var_num_):

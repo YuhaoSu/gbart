@@ -93,6 +93,8 @@ def split_node(node: LeafNode, split_conditions: Tuple[SplitCondition, SplitCond
     The left node contains all values for the splitting variable less than the splitting value
     """
     #print(node.s_list)
+    #if split_conditions is None:
+    #    return None
     left_split = node.split + split_conditions[0]
     right_split = node.split + split_conditions[1]
     #if node.s_list is not None : print(node.s_list)
