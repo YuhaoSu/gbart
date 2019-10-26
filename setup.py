@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gbart",
-    version="0.2.0",
-    author="Yuhao Su, Ding Jie",
+    version="0.2.1",
+    author="Yuhao Su, Jie Ding",
     author_email="su000088@umn.edu, dingj@umn.edu",
-    description='A python package to implement Variable grouping based on Bayesian additive regression tree, associated with submitted ICASSP2020 paper',
+    description='A python package to implement Variable Grouping Based Bayesian Additive Regression Tree, associated with ICASSP2020 submitted paper',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/AugusHsu/gbart",
