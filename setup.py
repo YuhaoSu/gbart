@@ -63,7 +63,7 @@ setup(
         'pandas',
         'scipy',
         'seaborn',
-        'sklearn',
+        'scikit-learn',
         'statsmodels',
     ]
 )
